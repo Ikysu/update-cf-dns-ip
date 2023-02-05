@@ -1,0 +1,3 @@
+let err=(e)=>console.log(e);
+((headers,$)=>{fetch(`https://api.cloudflare.com/client/v4/zones/${$}/dns_records?type=A`,{headers}).then(e=>{e.json().then(j=>{if(j.success){for(let i=0;i<j.result.length;i++){fetch(`https://api.cloudflare.com/client/v4/zones/${$}/dns_records/`+j.result[i].id,{headers,method:"PUT",body:JSON.stringify({type:"A",name:j.result[i].name,content:process.argv[2],ttl:j.result[i].ttl,proxied:j.result[i].proxied})}).then(e=>{e.json().then(t=>{console.log(j.result[i].name,t.success?"OK":"ERR")}).catch(err)}).catch(err)}}else{console.log("err")}}).catch(err)}).catch(err)})
+({"Authorization":"Bearer "+process.argv[3],"Content-Type":"application/json"},process.argv[4])
